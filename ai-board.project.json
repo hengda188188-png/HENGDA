@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "repository": "hengda188188-png/HENGDA",
+  "type": "project",
+  "name": "PhotoRelay 掃碼傳圖與圖片管理平台",
+  "status": "testing",
+  "progress": 70,
+  "inUse": false,
+  "startedOn": "2026-08-13",
+  "launchedOn": null,
+  "deploymentUrl": null,
+  "manualFields": [
+    "owners",
+    "uploadUser",
+    "screenshots",
+    "units.DD.shifts",
+    "units.UU.shifts",
+    "externalPartners"
+  ],
+  "units": {
+    "DD": { "shifts": { "early": null, "middle": null, "late": null } },
+    "UU": { "shifts": { "early": null, "middle": null, "late": null } },
+    "CS": { "enabled": true },
+    "AS": { "enabled": true }
+  },
+  "externalPartners": []
+}
