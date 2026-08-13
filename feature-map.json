@@ -1,0 +1,396 @@
+{
+  "project": "photo-relay",
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-10",
+  "note": "功能關聯映射（CLAUDE.md #287 建站必辦）。改任一功能前先查這裡的 anchors/covers，改完更新本檔。本機沒有 tools/feature-map/fm.mjs，回主基地要跑 fm.mjs check 建基準。",
+  "features": [
+    {
+      "id": "project-manage",
+      "name": "專案管理（建立/改名/封存/搜尋分頁）",
+      "anchors": [
+        "src/store.mjs:createProject",
+        "src/store.mjs:updateProject",
+        "src/store.mjs:listProjects",
+        "src/routes/projects.mjs:getProjects",
+        "src/routes/projects.mjs:postProject",
+        "src/routes/projects.mjs:patchProject",
+        "web/js/desktop/projects.js:loadProjects",
+        "web/js/desktop/projects.js:openProjectSettings"
+      ],
+      "covers": [
+        "GET /api/projects",
+        "POST /api/projects",
+        "GET /api/projects/:id",
+        "PATCH /api/projects/:id"
+      ],
+      "tests": [
+        "test/run.mjs:專案 / 使用者",
+        "e2e:專案標題正確顯示"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F1"
+      ],
+      "ui": [
+        "web/desktop.html:[data-role=project-list]"
+      ]
+    },
+    {
+      "id": "devices",
+      "name": "設備識別與歸屬指派（當天＋該專案）",
+      "anchors": [
+        "src/store.mjs:ensureDevice",
+        "src/store.mjs:labelDevice",
+        "src/store.mjs:listDevices",
+        "src/store.mjs:shortCodeOf",
+        "src/store.mjs:decoratePhoto",
+        "src/routes/mobile.mjs:postDevice",
+        "src/routes/projects.mjs:getDevices",
+        "src/routes/projects.mjs:patchDevice",
+        "web/js/lib/device.js:deviceId",
+        "web/js/desktop/devices.js:renderDevices",
+        "web/js/desktop/gallery.js:groupHeader"
+      ],
+      "covers": [
+        "POST /api/m/:token/device",
+        "GET /api/projects/:id/devices",
+        "PATCH /api/devices/:id"
+      ],
+      "tests": [
+        "test/run.mjs:設備識別 / 歸屬指派",
+        "test/run.mjs:歸屬範圍（當天 / 該專案）",
+        "e2e:電腦端出現這台設備",
+        "e2e:指派歸屬後照片的上傳者變成指定名稱"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F16",
+        "README.md#設備識別怎麼運作"
+      ],
+      "ui": [
+        "web/desktop.html:[data-role=device-list]",
+        "web/mobile.html:[data-role=device-code]"
+      ]
+    },
+    {
+      "id": "qr-pairing",
+      "name": "QR 產生與區網配對",
+      "anchors": [
+        "src/lib/qrcode.mjs:encode",
+        "src/lib/qrcode.mjs:toSVG",
+        "src/lib/lan-ip.mjs:listLanAddresses",
+        "src/routes/projects.mjs:getQr",
+        "web/js/desktop/projects.js:renderQr",
+        "web/js/desktop/projects.js:setQrOpen",
+        "web/js/ui/floating-window.js:openFloatingWindow"
+      ],
+      "covers": [
+        "GET /api/projects/:id/qr",
+        "POST /api/projects/:id/token"
+      ],
+      "tests": [
+        "test/qr.test.mjs",
+        "e2e:QR 圖有畫出來（真的是 SVG 內容）"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F3"
+      ],
+      "ui": [
+        "web/desktop.html:[data-role=qr-box]"
+      ]
+    },
+    {
+      "id": "mobile-upload",
+      "name": "手機上傳（標準化/縮圖/進度/重試）",
+      "anchors": [
+        "web/js/lib/image.js:standardize",
+        "web/js/mobile/main.js:uploadOne",
+        "src/routes/mobile.mjs:postPhoto",
+        "src/routes/mobile.mjs:putBlob",
+        "src/lib/blob.mjs:receiveImage"
+      ],
+      "covers": [
+        "GET /m/:token",
+        "GET /api/m/:token/context",
+        "POST /api/m/:token/photos",
+        "PUT /api/m/:token/photos/:photoId/blob",
+        "GET /api/m/:token/recent"
+      ],
+      "tests": [
+        "test/run.mjs:R1/R2/R3/R4/R5",
+        "e2e:手機端整條上傳流程走通"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F4"
+      ],
+      "ui": [
+        "web/mobile.html"
+      ]
+    },
+    {
+      "id": "live-sync",
+      "name": "電腦端即時同步（SSE）",
+      "anchors": [
+        "src/lib/bus.mjs:emit",
+        "src/routes/events.mjs:stream",
+        "web/js/lib/api.js:subscribeEvents",
+        "web/js/desktop/main.js:resubscribe"
+      ],
+      "covers": [
+        "GET /api/events"
+      ],
+      "tests": [
+        "test/run.mjs:SSE 即時同步",
+        "e2e:手機上傳後電腦端縮圖自動出現"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F5"
+      ],
+      "ui": [
+        "web/desktop.html:[data-role=gallery]"
+      ]
+    },
+    {
+      "id": "gallery-filter",
+      "name": "縮圖牆（就地編輯）+ 快搜尋 + 篩選列 + 分頁",
+      "anchors": [
+        "src/store.mjs:listPhotos",
+        "src/routes/photos.mjs:getPhotos",
+        "web/js/desktop/gallery.js:renderFilters",
+        "web/js/desktop/gallery.js:renderGrid",
+        "web/js/desktop/gallery.js:renderPager",
+        "web/js/desktop/state.js:readUrl",
+        "web/js/desktop/gallery.js:inlineField"
+      ],
+      "covers": [
+        "GET /api/projects/:id/photos"
+      ],
+      "tests": [
+        "test/run.mjs:分頁 / 搜尋 / 篩選",
+        "e2e:快搜尋沒有結果時顯示…",
+        "e2e:搜尋後網址帶得走條件",
+        "e2e:縮圖上直接打名稱/描述有存進後端"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F6"
+      ],
+      "ui": [
+        "web/desktop.html:[data-role=status-chips]",
+        "web/desktop.html:[data-role=photo-search]"
+      ]
+    },
+    {
+      "id": "annotate",
+      "name": "標註名稱／備註（樂觀鎖）",
+      "anchors": [
+        "src/store.mjs:updatePhoto",
+        "src/routes/photos.mjs:patchPhoto",
+        "web/js/desktop/viewer.js:flushSave",
+        "web/js/desktop/viewer.js:setFieldValue",
+        "web/js/desktop/viewer.js:toggleSidePanel"
+        ,"web/js/desktop/gallery.js:openComparison"
+      ],
+      "covers": [
+        "PATCH /api/photos/:id"
+      ],
+      "tests": [
+        "test/run.mjs:R6 樂觀鎖",
+        "e2e:標註名稱與備註有存進後端"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#R6"
+      ],
+      "ui": [
+        "web/js/desktop/viewer.js:[data-role=name]"
+      ]
+    },
+    {
+      "id": "crop-edit",
+      "name": "放大全圖 + 編輯器（裁切／旋轉／箭頭／文字／螢光筆）",
+      "anchors": [
+        "web/js/ui/overlay.js:openModal",
+        "web/js/ui/editor.js:openEditor",
+        "web/js/ui/editor.js:drawAnnotations",
+        "web/js/ui/editor.js:toRotated",
+        "web/js/lib/image.js:rotateSource",
+        "src/routes/photos.mjs:putEdited",
+        "src/routes/photos.mjs:deleteEdited",
+        "src/store.mjs:updatePhoto(annotations)"
+      ],
+      "covers": [
+        "PUT /api/photos/:id/edited",
+        "DELETE /api/photos/:id/edited",
+        "GET /api/photos/:id/file"
+      ],
+      "tests": [
+        "test/run.mjs:R9 裁切不覆寫原圖",
+        "test/run.mjs:圖片標註",
+        "e2e:畫箭頭/螢光筆/文字標註",
+        "e2e:放大圖沒有超出舞台"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#R9"
+      ],
+      "ui": [
+        "web/css/overlay.css:.editor",
+        "web/css/overlay.css:.viewer-stage img"
+      ]
+    },
+    {
+      "id": "drive-upload",
+      "name": "上傳 Google 雲端（兩種憑證方式 + 批次 + 進度 + 清單 CSV + 可編輯共用連結）",
+      "anchors": [
+        "src/lib/google-drive.mjs:buildAuthUrl",
+        "src/lib/google-drive.mjs:exchangeCode",
+        "src/lib/google-drive.mjs:uploadFile",
+        "src/routes/drive.mjs:postUploadProject",
+        "src/routes/drive.mjs:runUpload",
+        "src/routes/photos.mjs:buildManifestCsv",
+        "web/js/desktop/gallery.js:uploadToDrive",
+        "web/js/settings/main.js:connect",
+        "src/lib/google-drive.mjs:shareFolderForEditing",
+        "src/lib/google-drive.mjs:saveServiceAccount",
+        "src/lib/google-drive.mjs:serviceAccessToken",
+        "src/lib/google-drive.mjs:driveError",
+        "src/routes/drive.mjs:postServiceAccount",
+        "src/routes/drive.mjs:postMode",
+        "web/js/settings/main.js:switchMode",
+        "web/js/settings/main.js:importServiceAccount"
+      ],
+      "covers": [
+        "GET /api/drive/status",
+        "POST /api/drive/credentials",
+        "GET /api/drive/auth-url",
+        "GET /api/drive/callback",
+        "POST /api/drive/revoke",
+        "POST /api/drive/folder-check",
+        "POST /api/projects/:id/drive/upload",
+        "GET /api/projects/:id/drive/job",
+        "GET /api/projects/:id/manifest.csv",
+        "POST /api/drive/service-account",
+        "POST /api/drive/mode"
+      ],
+      "tests": [
+        "test/run.mjs:R7/R8 上傳條件",
+        "test/run.mjs:清單 CSV",
+        "e2e:設定頁載入且顯示未連結狀態",
+        "test/service-account.test.mjs",
+        "e2e:設定頁憑證切換"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F11",
+        "README.md#google"
+      ],
+      "ui": [
+        "web/settings.html",
+        "web/desktop.html:[data-act=upload-drive]"
+      ],
+      "unverified": "真實 Google 帳號上傳／共用連結未跑過（需使用者 OAuth 憑證）；服務帳戶模式未對真共用雲端硬碟傳過（需 Google Workspace）。已驗：憑證驗證、RS256 簽章、模式切換、未授權/未設資料夾會明確擋下。"
+    },
+    {
+      "id": "settings",
+      "name": "設定（影像參數 / 上限 / CSV）",
+      "anchors": [
+        "src/config.mjs:saveSettings",
+        "src/routes/drive.mjs:postSettings",
+        "web/js/settings/main.js:saveSettings"
+      ],
+      "covers": [
+        "GET /api/settings",
+        "POST /api/settings"
+      ],
+      "tests": [
+        "test/run.mjs:R3 檔案大小上限",
+        "test/run.mjs:R4 數量上限"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#F15"
+      ],
+      "ui": [
+        "web/settings.html"
+      ]
+    },
+    {
+      "id": "security",
+      "name": "資安（token/型別/大小/路徑/速率）",
+      "anchors": [
+        "src/lib/security.mjs:sniffImageType",
+        "src/lib/security.mjs:safeEqual",
+        "src/lib/http.mjs:rateLimit",
+        "src/lib/http.mjs:sendFile",
+        "src/routes/mobile.mjs:projectFromToken"
+      ],
+      "covers": [
+        "GET /assets/*path",
+        "GET /healthz"
+      ],
+      "tests": [
+        "test/run.mjs:R1",
+        "test/run.mjs:R2",
+        "test/run.mjs:R11",
+        "test/run.mjs:資安雜項"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#二"
+      ],
+      "ui": []
+    },
+    {
+      "id": "console-auth",
+      "name": "工作台存取密碼（多人區網用，預設關閉）",
+      "anchors": [
+        "src/lib/console-auth.mjs:setPassword",
+        "src/lib/console-auth.mjs:hasValidCookie",
+        "src/lib/console-auth.mjs:isOpenPath",
+        "src/routes/auth.mjs:postLogin",
+        "src/routes/index.mjs:handleRequest(密碼閘門)",
+        "web/js/login/main.js",
+        "web/js/settings/main.js:saveConsolePassword"
+      ],
+      "covers": [
+        "GET /login",
+        "GET /api/auth/status",
+        "POST /api/auth/login",
+        "POST /api/auth/logout",
+        "POST /api/auth/password",
+        "POST /api/auth/password/remove"
+      ],
+      "tests": [
+        "test/console-auth.test.mjs"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#R19",
+        "README.md#工作台密碼"
+      ],
+      "ui": [
+        "web/login.html",
+        "web/settings.html:[data-role=auth-state]"
+      ]
+    },
+    {
+      "id": "persistence",
+      "name": "跨日／跨重啟持久性 + 多台電腦同步",
+      "anchors": [
+        "src/store.mjs:init",
+        "src/store.mjs:persist",
+        "src/lib/bus.mjs:emit",
+        "web/js/lib/api.js:subscribeEvents(onReconnect)",
+        "web/js/desktop/main.js:resubscribe",
+        "web/js/desktop/devices.js:dateScope"
+      ],
+      "covers": [
+        "GET /api/events",
+        "GET /api/projects/:id/devices?date=all"
+      ],
+      "tests": [
+        "test/persistence.test.mjs",
+        "e2e:兩台電腦同步"
+      ],
+      "docs": [
+        "docs/build-spec-photo-relay.md#R18",
+        "README.md#多人多台一起用"
+      ],
+      "ui": [
+        "web/desktop.html:[data-date]"
+      ]
+    }
+  ]
+}

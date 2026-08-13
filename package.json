@@ -1,0 +1,18 @@
+{
+  "name": "photo-relay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "手機掃碼傳圖工作台：QR → 手機上傳 → 電腦即時同步 → 標註裁切 → 上傳 Google 雲端硬碟",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node test/run.mjs && node test/qr.test.mjs && node test/service-account.test.mjs && node test/oauth-file.test.mjs && node test/persistence.test.mjs && node test/console-auth.test.mjs",
+    "gate": "node test/gate.mjs",
+    "test:spec": "node test/run.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {}
+}

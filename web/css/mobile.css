@@ -1,0 +1,56 @@
+/* 手機頁：單欄、大按鈕、360px 也不破版。 */
+.m-wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 14px 14px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.m-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.m-head .ico { color: var(--accent); width: 20px; height: 20px; flex: none; }
+.m-head .nm { font-weight: 600; }
+
+.m-card { padding: 14px; }
+
+.m-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.m-actions .btn { justify-content: center; padding: 14px 10px; font-size: 15px; }
+
+.m-field input[type="text"] { width: 100%; max-width: 100%; font-size: 16px; padding: 10px; }
+
+.m-queue { display: flex; flex-direction: column; gap: 8px; }
+.m-item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+.m-item .pic {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  background: var(--bg) center/cover no-repeat;
+  overflow: hidden;
+}
+.m-item .pic img { width: 100%; height: 100%; object-fit: cover; }
+.m-item .nm { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-item .st { font-size: 12px; color: var(--text-2); }
+.m-item .st.err { color: var(--danger); }
+.m-item .st.ok { color: var(--ok); }
+.m-item .progress { margin-top: 4px; }
+
+.m-empty { text-align: center; color: var(--text-3); padding: 18px 0; }
+.m-note { font-size: 12px; color: var(--text-2); line-height: 1.7; }

@@ -1,0 +1,30 @@
+{
+  "project": "photo-relay-native",
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-11",
+  "features": [
+    {
+      "id": "native-central-host",
+      "name": "原生中央控制程式／全新設備可攜部署／外置資料恢復",
+      "anchors": [
+        "Program.cs:MainForm",
+        "Program.cs:StartServerAsync",
+        "Program.cs:ChooseDataDirectory",
+        "Program.cs:RefreshAddresses",
+        "../pack-windows.ps1"
+      ],
+      "covers": [],
+      "tests": [
+        "dotnet build PhotoRelayNative.csproj -c Release",
+        "portable smoke:PhotoRelay.exe -> GET /healthz"
+      ],
+      "docs": [
+        "README.md",
+        "../docs/central-host-deployment.md"
+      ],
+      "ui": [
+        "Program.cs:BuildUi"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+/* 設計 token：單一主色 + 中性灰。禁彩虹漸層、禁多色光暈、禁 emoji 當圖示（圖示一律 inline SVG）。 */
+:root {
+  color-scheme: light dark;
+
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-soft: #eff4ff;
+  --accent-border: #c7d7fe;
+
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #fafbfc;
+  --border: #e2e5ea;
+  --border-strong: #cbd2da;
+
+  --text: #17202b;
+  --text-2: #59636f;
+  --text-3: #808b98;
+  --on-accent: #ffffff;
+
+  --ok: #157347;
+  --ok-soft: #e7f5ed;
+  --warn: #9a5b00;
+  --warn-soft: #fdf3e2;
+  --danger: #b42318;
+  --danger-soft: #fdecea;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+  --shadow-2: 0 8px 28px rgba(16, 24, 40, .16);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+
+  /* 欄位寬度：按內容給寬，禁 width:100% 無 max-width */
+  --w-field-sm: 150px;
+  --w-field-md: 240px;
+  --w-field-lg: 440px;
+  --w-content: 1180px;
+
+  /* z 階梯：背景 < 彈窗 < 巢狀 < 放大/提示 */
+  --z-sticky: 150;
+  --z-modal: 1000;
+  --z-modal-nested: 1100;
+  --z-toast: 2000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #6f9bff;
+    --accent-strong: #8fb2ff;
+    --accent-soft: #16213a;
+    --accent-border: #2b4272;
+
+    --bg: #0f1319;
+    --surface: #161b23;
+    --surface-2: #1b212b;
+    --border: #2a323d;
+    --border-strong: #3a444f;
+
+    --text: #e8ecf2;
+    --text-2: #a4b0bf;
+    --text-3: #7d8998;
+    --on-accent: #0f1319;
+
+    --ok: #56d394;
+    --ok-soft: #12281d;
+    --warn: #e3ae5f;
+    --warn-soft: #2b2113;
+    --danger: #ff8b80;
+    --danger-soft: #2c1614;
+
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, .4);
+    --shadow-2: 0 10px 30px rgba(0, 0, 0, .55);
+  }
+}

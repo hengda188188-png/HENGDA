@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>掃碼傳圖工作台</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<link rel="stylesheet" href="/assets/css/overlay.css">
+<link rel="stylesheet" href="/assets/css/floating-window.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <span class="brand">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM19 19h2v2h-2zM14 19h2v2h-2zM19 14h2v2h-2z"/></svg>
+      <span data-i18n="app.name"></span>
+    </span>
+    <span class="spacer"></span>
+    <span class="conn-status" data-role="conn-status" data-state="connecting">
+      <span class="conn-dot" aria-hidden="true"></span>
+      <span data-role="conn-status-label"></span>
+    </span>
+    <div style="min-width:0">
+      <div class="truncate" style="font-weight:600" data-role="project-title"></div>
+      <div class="small muted truncate" data-role="project-note"></div>
+    </div>
+    <button type="button" class="btn btn-sm" data-act="project-settings" data-i18n="project.settings"></button>
+    <a class="btn btn-sm" href="/settings">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>
+      <span data-i18n="app.settings"></span>
+    </a>
+  </header>
+
+  <!-- QR 是固定浮動工具：觸發鈕與內容都脫離文件流，不占工作台框架。 -->
+  <div class="qr-dock" data-role="qr-dock" data-open="false">
+    <button type="button" class="qr-toggle" data-act="qr-toggle" aria-expanded="false" aria-controls="qr-panel" data-i18n-label="qr.show">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM19 19h2v2h-2zM14 19h2v2h-2zM19 14h2v2h-2z"/></svg>
+      <span class="hidden" data-role="qr-toggle-label"></span>
+    </button>
+    <div class="qr-panel" id="qr-panel">
+      <div class="qr-panel-inner card">
+        <div class="qr-compact-main">
+          <div class="qr-box" data-role="qr-box"></div>
+          <button type="button" class="btn btn-sm qr-details-toggle" data-act="qr-details-toggle" aria-expanded="false">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 18 6-6-6-6"/></svg>
+            <span data-role="qr-details-label" data-i18n="qr.detailsShow"></span>
+          </button>
+        </div>
+        <div class="qr-side">
+          <h2 data-i18n="qr.title"></h2>
+          <p class="small muted" data-i18n="qr.hint"></p>
+          <p class="small muted" data-i18n="qr.shareHint"></p>
+          <p class="qr-url mono small" data-role="qr-url"></p>
+          <div class="row" style="margin-top:6px">
+            <div class="fld fld-md">
+              <label for="qr-address" data-i18n="qr.address"></label>
+              <select id="qr-address" data-role="address" style="width:auto;max-width:280px"></select>
+            </div>
+            <button type="button" class="btn btn-sm" data-act="copy-url">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+              <span data-i18n="qr.copy"></span>
+            </button>
+            <button type="button" class="btn btn-sm" data-act="regen-token">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 0 1 15.3-6.4L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.3 6.4L3 16"/><path d="M3 21v-5h5"/></svg>
+              <span data-i18n="qr.regen"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <aside class="side">
+      <section class="card panel">
+        <div class="panel-head">
+          <h2 data-i18n="project.section"></h2>
+          <button type="button" class="btn btn-sm btn-primary" data-act="new-project">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
+            <span data-i18n="project.new"></span>
+          </button>
+        </div>
+        <div class="fld fld-md" style="margin-bottom:8px">
+          <label for="project-search" data-i18n="project.search"></label>
+          <input id="project-search" class="field-project-search" type="search" data-role="project-search" autocomplete="off">
+        </div>
+        <label class="small" style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+          <input type="checkbox" data-role="show-archived">
+          <span data-i18n="project.showArchived"></span>
+        </label>
+        <div class="project-list" data-role="project-list"></div>
+        <div class="pager hidden" data-role="project-pager" style="border-top:0;padding:8px 0 0"></div>
+      </section>
+
+      <section class="card panel">
+        <div class="panel-head">
+          <h2 data-i18n="device.section"></h2>
+          <span class="small muted" data-role="device-total"></span>
+        </div>
+        <div class="chips" style="margin-bottom:8px" role="group" aria-label="設備日期範圍">
+          <button type="button" class="chip" data-date="today" aria-pressed="true"><span data-i18n="device.dateToday"></span></button>
+          <button type="button" class="chip" data-date="all" aria-pressed="false"><span data-i18n="device.dateAll"></span></button>
+        </div>
+        <div class="member-list" data-role="device-list"></div>
+        <p class="small muted" style="margin-top:8px" data-role="device-hint"></p>
+      </section>
+    </aside>
+
+    <main class="main">
+      <section class="card gallery-wrap">
+        <div class="toolbar">
+          <div class="row" style="align-items:center">
+            <div class="search-box">
+              <label class="hidden" for="photo-search" data-i18n="gallery.search"></label>
+              <input id="photo-search" class="field-photo-search" type="search" data-role="photo-search" autocomplete="off" aria-describedby="search-hint">
+              <span class="hint" id="search-hint" data-role="search-hint" data-i18n="search.shortcut"></span>
+              <button type="button" class="clear hidden" data-act="clear-search" data-i18n-label="search.clear">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 6 6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+            <button type="button" class="chip" data-role="sort-toggle" aria-pressed="false" data-i18n-label="view.label">
+              <svg class="ico" style="width:13px;height:13px" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="7" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M17 8h4M17 12h4M17 16h4"/></svg>
+              <span></span>
+            </button>
+            <button type="button" class="btn btn-sm hidden" data-act="clear-filters" data-i18n="filter.clear"></button>
+            <span class="spacer" style="flex:1"></span>
+            <div class="fld">
+              <label for="photo-pagesize" data-i18n="gallery.perPage"></label>
+              <select id="photo-pagesize" data-role="photo-pagesize" style="width:auto;max-width:92px">
+                <option value="12">12</option>
+                <option value="24">24</option>
+                <option value="48">48</option>
+                <option value="96">96</option>
+              </select>
+            </div>
+            <span class="small muted" data-role="gallery-count"></span>
+          </div>
+          <div class="chips" role="group" aria-label="狀態篩選">
+            <span class="chip-group-label" data-i18n="gallery.status"></span>
+            <span class="chips" data-role="status-chips"></span>
+            <span class="chip-group-label" style="margin-left:8px" data-i18n="filter.cloud"></span>
+            <span class="chips" data-role="drive-chips"></span>
+          </div>
+          <div class="chips" role="group" aria-label="設備篩選">
+            <span class="chip-group-label" data-i18n="device.section"></span>
+            <span class="chips" data-role="device-chips"></span>
+          </div>
+        </div>
+
+        <!-- 上傳列：擺在縮圖牆正上方，不再藏在右下角 -->
+        <div class="action-bar">
+          <div class="chips" role="group" aria-label="快速選取">
+            <span class="chip-group-label" data-i18n="select.quick"></span>
+            <button type="button" class="chip" data-pick="page"><span data-i18n="select.page"></span></button>
+            <button type="button" class="chip" data-pick="notUploaded"><span data-i18n="select.notUploaded"></span></button>
+            <button type="button" class="chip" data-pick="stale"><span data-i18n="select.stale"></span></button>
+            <button type="button" class="chip" data-pick="confirmed"><span data-i18n="select.confirmed"></span></button>
+            <button type="button" class="chip" data-pick="none"><span data-i18n="select.none"></span></button>
+          </div>
+          <span class="spacer" style="flex:1"></span>
+          <span class="small" data-role="select-count"></span>
+          <button type="button" class="btn" data-act="compare-selected" disabled>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="8" height="16" rx="1"/><rect x="13" y="4" width="8" height="16" rx="1"/></svg>
+            <span data-i18n="compare.action"></span>
+          </button>
+          <button type="button" class="btn btn-primary btn-upload" data-act="upload-selected" data-i18n-label="batch.uploadSelected">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.5 19a4.5 4.5 0 0 0 .5-9 6 6 0 0 0-11.6 1.5A3.75 3.75 0 0 0 7 19z"/><path d="M12 12v5M9.5 14.5 12 12l2.5 2.5"/></svg>
+            <span data-role="upload-selected-label"></span>
+          </button>
+          <button type="button" class="btn" data-act="upload-all" data-i18n="batch.uploadAll"></button>
+        </div>
+
+        <div class="gallery" data-role="gallery"></div>
+
+        <div class="pager" data-role="gallery-pager"></div>
+
+        <div class="pager" style="gap:12px">
+          <button type="button" class="btn btn-sm" data-act="confirm-page">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6 9 17l-5-5"/></svg>
+            <span data-i18n="batch.selectAllConfirm"></span>
+          </button>
+          <button type="button" class="btn btn-sm" data-act="copy-links">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>
+            <span data-i18n="batch.copyAllLinks"></span>
+          </button>
+          <button type="button" class="btn btn-sm" data-act="fix-links" data-i18n="batch.fixLinks"></button>
+          <button type="button" class="btn btn-sm" data-act="download-csv">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v12"/><path d="m7 12 5 5 5-5"/><path d="M4 21h16"/></svg>
+            <span data-i18n="batch.csv"></span>
+          </button>
+        </div>
+
+        <div class="pager hidden" data-role="job" style="flex-direction:column;align-items:stretch;gap:6px">
+          <div class="small" data-role="job-text"></div>
+          <div class="progress"><i data-role="job-bar"></i></div>
+          <div data-role="job-link"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+<script type="module" src="/assets/js/desktop/main.js"></script>
+</body>
+</html>

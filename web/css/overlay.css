@@ -1,0 +1,263 @@
+/* 浮層樣式：容器固定高，內容內捲——彈窗不會因為內容多就撐破畫面。 */
+.ov-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 19, 25, .55);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.ov-box {
+  display: flex;
+  flex-direction: column;
+  max-height: 92vh;
+  max-width: 96vw;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+}
+
+.ov-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 12px var(--space-4);
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+.ov-title { font-size: 15px; }
+
+.ov-body { flex: 1; min-height: 0; overflow-y: auto; padding: var(--space-4); }
+.ov-foot {
+  flex: none;
+  padding: 12px var(--space-4);
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.ov-actions { display: flex; gap: var(--space-2); justify-content: flex-end; flex-wrap: wrap; }
+.ov-message { line-height: 1.8; }
+
+/* 看圖模式：圖片區固定高，右側標註欄固定寬 */
+.ov-viewer .ov-body { padding: 0; }
+.viewer-grid {
+  position: relative;
+  display: block;
+  height: 100%;
+  min-height: 0;
+}
+.viewer-stage {
+  position: relative;
+  background: #0d1117;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  overflow: hidden;
+  height: 100%;
+}
+/*
+ * 放大 = 看全圖。
+ * 坑：只寫 max-height:100% 在自動高度的 grid 容器裡沒有參考值，
+ * 直式照會直接溢出舞台（實測 858×1525 塞進 858×704）。
+ * 改用絕對定位 + inset:0 + margin:auto，尺寸才有明確參考框。
+ */
+.viewer-stage img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+/* 禁止空白無用框架設計規範：圖片 404 時不留黑底空白舞台，改顯示 icon+文字，讓使用者立刻知道是「檔案遺失」而不是在等待載入 */
+.viewer-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, .55);
+  font-size: 13px;
+}
+.viewer-fallback .ico { width: 40px; height: 40px; }
+
+.viewer-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, .9);
+  color: #17202b;
+  border: 0;
+  border-radius: 999px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.viewer-nav[disabled] { opacity: .3; cursor: not-allowed; }
+.viewer-nav.prev { left: 12px; }
+.viewer-nav.next { right: 12px; }
+
+.viewer-side {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  bottom: 16px;
+  width: min(340px, calc(100% - 32px));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  overflow: hidden;
+  transition: transform .2s ease;
+  z-index: 2;
+}
+.viewer-side.is-collapsed { transform: translateX(calc(100% - 44px)); }
+.viewer-side-head { height: 48px; flex:none; display:flex; align-items:center; gap:8px; padding:0 8px 0 16px; border-bottom:1px solid var(--border); }
+.viewer-side-head h2 { flex:1; min-width:0; margin:0; font-size:15px; white-space:nowrap; overflow:hidden; }
+.viewer-side-content { flex:1; min-height:0; overflow-y:auto; scrollbar-gutter:stable; padding:var(--space-3); display:flex; flex-direction:column; gap:var(--space-3); }
+.viewer-side.is-collapsed .viewer-side-content,
+.viewer-side.is-collapsed .viewer-side-head h2 { visibility:hidden; }
+.viewer-side.is-collapsed .viewer-side-head { padding-left:0; justify-content:flex-start; }
+.viewer-section { display:flex; flex-direction:column; gap:var(--space-2); padding-bottom:var(--space-3); border-bottom:1px solid var(--border); }
+.viewer-section h3 { margin:0; font-size:13px; color:var(--text-2); }
+.viewer-status { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+.viewer-status .chip { justify-content:center; min-width:0; padding-inline:6px; }
+.viewer-status .chip.is-active { background:var(--accent-soft); border-color:var(--accent-border); color:var(--accent-strong); font-weight:700; }
+.viewer-side-footer { margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.viewer-side .fld-lg { max-width: 100%; }
+.viewer-side textarea { max-width: 100%; width: 100%; }
+.viewer-side input[type="text"] { max-width: 100%; width: 100%; }
+.viewer-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.viewer-meta { font-size: 12px; color: var(--text-3); line-height: 1.7; }
+
+/* 裁切器 */
+.cropper { display: flex; flex-direction: column; gap: var(--space-3); }
+.crop-stage {
+  position: relative;
+  height: min(56vh, 520px);
+  background: #0d1117;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+}
+.crop-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.crop-rect {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, .95);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .5);
+  cursor: move;
+}
+.crop-rect .h {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, .35);
+  border-radius: 2px;
+}
+.crop-rect .h.nw { left: -7px; top: -7px; cursor: nwse-resize; }
+.crop-rect .h.ne { right: -7px; top: -7px; cursor: nesw-resize; }
+.crop-rect .h.sw { left: -7px; bottom: -7px; cursor: nesw-resize; }
+.crop-rect .h.se { right: -7px; bottom: -7px; cursor: nwse-resize; }
+.crop-bar { display: flex; gap: var(--space-2); align-items: center; flex-wrap: wrap; }
+
+/* ── 圖片編輯器 ─────────────────────────────────── */
+.editor { display: flex; flex-direction: column; gap: var(--space-3); }
+.edit-bar {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+.edit-sep { width: 1px; height: 20px; background: var(--border); }
+.edit-bar .chip .ico { width: 13px; height: 13px; }
+
+.swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: var(--swatch);
+  cursor: pointer;
+  padding: 0;
+}
+.swatch[aria-pressed="true"] { border-color: var(--text); box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--text-3); }
+
+/* 標註圖層疊在圖片上；裁切模式時才吃滑鼠事件給裁切框 */
+.crop-stage canvas[data-role="overlay"] { z-index: 2; }
+.crop-stage[data-tool="crop"] canvas[data-role="overlay"] { pointer-events: none; }
+.crop-stage:not([data-tool="crop"]) .crop-rect { pointer-events: none; }
+.crop-rect.dim { border-style: dashed; opacity: .55; }
+.crop-rect.dim .h { display: none; }
+
+.edit-text-input {
+  position: absolute;
+  z-index: 3;
+  min-width: 140px;
+  max-width: 60%;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, .96);
+}
+
+/* 提示 */
+.toast-host {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  max-width: min(380px, 92vw);
+}
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 13px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-2);
+  font-size: 13px;
+  cursor: pointer;
+  animation: toast-in .18s ease-out;
+}
+.toast .ico { flex: none; margin-top: 2px; }
+.toast-ok { border-color: var(--ok); color: var(--ok); }
+.toast-error { border-color: var(--danger); color: var(--danger); }
+.toast span { color: var(--text); }
+.toast.leaving { opacity: 0; transition: opacity .2s; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 820px) {
+  .viewer-side { top:auto; left:8px; right:8px; bottom:8px; width:auto; max-height:46vh; }
+  .viewer-side.is-collapsed { transform:translateY(calc(100% - 48px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
+  * { transition: none !important; }
+}

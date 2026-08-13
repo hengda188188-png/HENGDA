@@ -1,0 +1,114 @@
+/* 可拖移浮動視窗（如QR面板）：不鎖背景、不佔版面——跟彈窗(ov-*)不同層級，
+   彈窗是「擋住其他操作的任務」，這個是「開著繼續做別的事的小工具」。 */
+.fw-win {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  min-width: 260px;
+  min-height: 160px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+.fw-win.show { opacity: 1; transform: none; }
+.fw-win.is-min {
+  width: 56px !important;
+  min-width: 56px;
+  min-height: 56px;
+  height: 56px !important;
+  border-radius: 50%;
+  overflow: visible;
+}
+.fw-win.is-min .fw-win__bar {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: move;
+  box-shadow: var(--shadow-2);
+}
+.fw-win.is-min .fw-win__title,
+.fw-win.is-min .fw-win__bar > .fw-win__dot:last-child { display: none; }
+.fw-win.is-min .fw-win__dot {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: var(--on-primary, #fff);
+  cursor: move;
+}
+.fw-win.is-min .fw-win__dot:hover { background: color-mix(in srgb, var(--primary) 86%, #000); color: var(--on-primary, #fff); }
+.fw-win.is-min .fw-win__dot svg { width: 26px; height: 26px; }
+
+.fw-win__bar {
+  flex: none;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-2) 0 var(--space-4);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  cursor: move;
+  user-select: none;
+}
+.fw-win__title {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fw-win__dot {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+}
+.fw-win__dot:hover { background: var(--border); color: var(--text); }
+.fw-win__dot svg { width: 15px; height: 15px; }
+
+.fw-win__body { flex: 1; min-height: 0; overflow: auto; padding: var(--space-4); }
+.fw-win--qr .fw-win__body { overflow: hidden; }
+.fw-win--qr .qr-panel-inner {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 759px), (max-height: 519px) {
+  .fw-win--qr .qr-panel-inner { flex-direction: column; align-items: stretch; }
+  .fw-win--qr .qr-box { width: min(168px, 32vh); align-self: center; }
+  .fw-win--qr .qr-side { overflow: visible; }
+}
+
+.fw-win__resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 50%, var(--border-strong) 50%, var(--border-strong) 60%, transparent 60%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fw-win { transition: none; }
+}

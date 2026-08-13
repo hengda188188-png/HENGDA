@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>設定 · 掃碼傳圖工作台</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/app.css">
+<link rel="stylesheet" href="/assets/css/overlay.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <span class="brand">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>
+      <span data-i18n="settings.title"></span>
+    </span>
+    <span class="spacer"></span>
+    <a class="btn btn-sm" href="/" data-i18n="app.back"></a>
+  </header>
+
+  <div style="overflow-y:auto;padding:16px">
+    <div style="max-width:var(--w-content);margin:0 auto;display:flex;flex-direction:column;gap:16px">
+
+      <section class="card panel">
+        <div class="panel-head"><h1 data-i18n="settings.drive"></h1>
+          <span class="tag" data-role="drive-state"></span>
+        </div>
+
+        <div class="chips" role="group" aria-label="憑證方式" style="margin-bottom:12px">
+          <span class="chip-group-label" data-i18n="settings.mode"></span>
+          <button type="button" class="chip" data-mode="oauth" aria-pressed="true"><span data-i18n="settings.mode.oauth"></span></button>
+          <button type="button" class="chip" data-mode="service" aria-pressed="false"><span data-i18n="settings.mode.service"></span></button>
+        </div>
+        <p class="small muted" data-role="mode-hint" style="margin-bottom:14px"></p>
+
+        <div data-role="pane-service" class="hidden">
+          <div class="fld fld-lg" style="max-width:640px">
+            <label for="sa-key" data-i18n="settings.saKey"></label>
+            <textarea id="sa-key" rows="6" data-role="sa-key" spellcheck="false" style="font-family:ui-monospace,Consolas,monospace;font-size:12px"></textarea>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <button type="button" class="btn" data-act="sa-pick" data-i18n="settings.saPickFile"></button>
+            <button type="button" class="btn btn-primary" data-act="sa-import" data-i18n="settings.saImport"></button>
+            <button type="button" class="btn btn-danger" data-act="sa-forget" data-i18n="settings.saForget"></button>
+            <input type="file" accept="application/json,.json" class="hidden" data-role="sa-file" aria-hidden="true" tabindex="-1">
+          </div>
+          <div class="fld fld-lg" style="margin-top:12px;max-width:640px">
+            <label for="sa-email" data-i18n="settings.saEmail"></label>
+            <input id="sa-email" type="text" readonly data-role="sa-email" class="mono">
+          </div>
+        </div>
+
+        <div data-role="pane-oauth">
+        <h2 class="small" style="margin-bottom:8px" data-i18n="settings.driveStep1"></h2>
+        <div class="row" style="margin-bottom:6px">
+          <div class="fld fld-lg">
+            <label for="client-id" data-i18n="settings.clientId"></label>
+            <input id="client-id" type="text" data-role="client-id" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="fld fld-md">
+            <label for="client-secret" data-i18n="settings.clientSecret"></label>
+            <input id="client-secret" type="password" data-role="client-secret" autocomplete="off">
+          </div>
+          <button type="button" class="btn" data-act="save-creds" data-i18n="settings.saveCreds"></button>
+          <button type="button" class="btn btn-primary" data-act="creds-pick" data-i18n="settings.credsFile"></button>
+          <input type="file" accept="application/json,.json" class="hidden" data-role="creds-file" aria-hidden="true" tabindex="-1">
+        </div>
+        <p class="small muted" data-role="creds-help"></p>
+
+        <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
+
+        <h2 class="small" style="margin-bottom:8px" data-i18n="settings.driveStep2"></h2>
+        <div class="row" style="margin-bottom:6px">
+          <button type="button" class="btn btn-primary" data-act="connect" data-i18n-label="settings.connect"></button>
+          <button type="button" class="btn btn-danger" data-act="disconnect" data-i18n="settings.disconnect"></button>
+        </div>
+        <p class="small muted" data-role="account-state"></p>
+        <p class="small muted" style="margin-top:6px" data-i18n="settings.oauthNote"></p>
+
+        <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
+
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--border);margin:16px 0">
+        <h2 class="small" style="margin-bottom:8px" data-i18n="settings.driveStep3"></h2>
+        <div class="row">
+          <div class="fld fld-lg">
+            <label for="folder-id" data-i18n="settings.folderId"></label>
+            <input id="folder-id" type="text" data-role="folder-id" autocomplete="off" spellcheck="false">
+          </div>
+          <button type="button" class="btn" data-act="check-folder" data-i18n="settings.folderCheck"></button>
+          <button type="button" class="btn btn-primary" data-act="test-drive" data-i18n="settings.test"></button>
+        </div>
+        <p class="small muted" data-role="folder-state"></p>
+        <p class="small" data-role="test-state" aria-live="polite"></p>
+      </section>
+
+      <section class="card panel">
+        <div class="panel-head">
+          <h1 data-i18n="auth.section"></h1>
+          <span class="tag" data-role="auth-state"></span>
+        </div>
+        <p class="small muted" data-role="auth-hint" style="margin-bottom:12px"></p>
+        <div class="row">
+          <div class="fld fld-md hidden" data-role="auth-current-wrap">
+            <label for="auth-current" data-i18n="auth.current"></label>
+            <input id="auth-current" type="password" data-role="auth-current" autocomplete="current-password">
+          </div>
+          <div class="fld fld-md">
+            <label for="auth-new" data-i18n="auth.new"></label>
+            <input id="auth-new" type="password" data-role="auth-new" autocomplete="new-password">
+          </div>
+          <button type="button" class="btn btn-primary" data-act="auth-save" data-i18n-label="auth.set"></button>
+          <button type="button" class="btn btn-danger hidden" data-act="auth-remove" data-i18n="auth.remove"></button>
+          <button type="button" class="btn hidden" data-act="auth-logout" data-i18n="auth.logout"></button>
+        </div>
+      </section>
+
+      <section class="card panel">
+        <div class="panel-head"><h1 data-i18n="settings.upload"></h1></div>
+        <div class="row">
+          <div class="fld fld-sm">
+            <label for="max-edge" data-i18n="settings.maxEdge"></label>
+            <input id="max-edge" type="number" min="640" max="8000" step="10" data-key="maxEdgePx">
+          </div>
+          <div class="fld fld-sm">
+            <label for="quality" data-i18n="settings.quality"></label>
+            <input id="quality" type="number" min="0.5" max="1" step="0.01" data-key="jpegQuality">
+          </div>
+          <div class="fld fld-sm">
+            <label for="thumb-edge" data-i18n="settings.thumbEdge"></label>
+            <input id="thumb-edge" type="number" min="128" max="1024" step="16" data-key="thumbEdgePx">
+          </div>
+          <div class="fld fld-sm">
+            <label for="max-file" data-i18n="settings.maxFile"></label>
+            <input id="max-file" type="number" min="1" max="200" step="1" data-role="max-file-mb">
+          </div>
+          <div class="fld fld-sm">
+            <label for="max-photos" data-i18n="settings.maxPhotos"></label>
+            <input id="max-photos" type="number" min="1" max="20000" step="10" data-key="maxPhotosPerProject">
+          </div>
+          <div class="fld fld-sm">
+            <label for="page-size" data-i18n="settings.pageSize"></label>
+            <input id="page-size" type="number" min="6" max="200" step="6" data-key="pageSize">
+          </div>
+        </div>
+        <label class="small" style="display:flex;align-items:center;gap:6px;margin-top:12px">
+          <input type="checkbox" data-key="uploadCsvManifest">
+          <span data-i18n="settings.csv"></span>
+        </label>
+        <div style="margin-top:14px">
+          <button type="button" class="btn btn-primary" data-act="save-settings" data-i18n="settings.save"></button>
+          <span class="small muted" style="margin-left:10px" data-i18n="settings.portNote"></span>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+<script type="module" src="/assets/js/settings/main.js"></script>
+</body>
+</html>
