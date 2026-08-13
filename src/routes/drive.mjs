@@ -218,7 +218,7 @@ async function runUpload(project, targets, job) {
   store.updateProject(project.id, { driveFolderId: folderId });
   job.folderLink = `https://drive.google.com/drive/folders/${folderId}`;
 
-  // 產生「知道連結的人可編輯」的共用連結（董事長要求）；失敗不中斷上傳，只記錄原因
+  // 產生「知道連結的人可編輯」的共用連結（使用需求）；失敗不中斷上傳，只記錄原因
   try {
     const shared = await drive.shareFolderForEditing(folderId);
     job.shareLink = shared.link;
